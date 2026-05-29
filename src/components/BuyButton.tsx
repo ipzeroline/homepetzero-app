@@ -13,7 +13,12 @@ export function BuyButton({ url, productId, label = "ซื้อบน Shopee",
     try {
       navigator.sendBeacon?.(
         "/api/track",
-        JSON.stringify({ productId, ts: Date.now() }),
+        JSON.stringify({
+          productId,
+          url,
+          marketplace: url.includes("lazada") ? "lazada" : "shopee",
+          ts: Date.now(),
+        }),
       );
     } catch {
       /* noop */

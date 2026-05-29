@@ -1,4 +1,13 @@
-export type CategorySlug = "mosquito" | "rat" | "insect" | "home-pest";
+export type CategorySlug =
+  | "mosquito"
+  | "mosquito-repeller"
+  | "rat"
+  | "cockroach"
+  | "insect"
+  | "pest-control"
+  | "bat"
+  | "bird"
+  | "home-pest";
 
 export interface Category {
   slug: CategorySlug;

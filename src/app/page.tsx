@@ -2,16 +2,16 @@ import Link from "next/link";
 import Image from "next/image";
 import type { Metadata } from "next";
 import { categories } from "@/data/categories";
-import { getFeaturedProducts, getAllProducts } from "@/lib/products";
+import { getAllProducts } from "@/lib/products";
 import { getAllPosts } from "@/lib/posts";
 import { ProductCard } from "@/components/ProductCard";
 import { buildMetadata } from "@/lib/seo";
 import { siteConfig } from "@/lib/site";
 
 export const metadata: Metadata = buildMetadata({
-  title: "HomePestZero รีวิวของใช้แก้ปัญหายุง หนู แมลง สำหรับบ้านคนไทย",
+  title: "เครื่องไล่ยุง เครื่องไล่หนู และเครื่องกำจัดแมลงยอดนิยม",
   description:
-    "HomePestZero รีวิวของใช้ในบ้าน เครื่องดักยุง เครื่องไล่หนู เครื่องไล่แมลง และสินค้า Shopee ที่ช่วยแก้ปัญหายุง หนู แมลง และสัตว์รบกวน",
+    "รวมรีวิว เปรียบเทียบ และแนะนำเครื่องไล่ยุง เครื่องดักยุง เครื่องไล่หนู และเครื่องกำจัดแมลง พร้อมอัปเดตราคาล่าสุดจาก Shopee และ Lazada",
   path: "/",
   keywords: [
     ...siteConfig.keywords,
@@ -44,19 +44,26 @@ const problemLinks = [
   },
 ];
 
-const moneyPages = [
-  { title: "YAGE เครื่องดักยุง ดีไหม? รีวิวก่อนซื้อ", href: "/review-yage-mosquito-trap" },
-  { title: "เครื่องดักยุง ยี่ห้อไหนดี สำหรับห้องนอน", href: "/category/mosquito" },
+const popularCategorySlugs = ["mosquito", "mosquito-repeller", "rat", "cockroach", "bat", "bird"];
+
+const buyingGuides = [
+  {
+    title: "YAGE เครื่องดักยุง ดีไหม? รีวิวก่อนซื้อ",
+    text: "รีวิวแบบเป็นกลาง พร้อมข้อดี ข้อควรรู้ วิธีใช้ และลิงก์เช็คราคาล่าสุด",
+    href: "/review-yage-mosquito-trap",
+    featured: true,
+  },
+  { title: "เครื่องดักยุง ยี่ห้อไหนดี สำหรับห้องนอน", href: "/rankings/best-mosquito-traps-2026" },
   { title: "เปรียบเทียบเครื่องดักยุง vs เครื่องไล่ยุง", href: "/compare" },
   { title: "เครื่องไล่หนูไฟฟ้า ได้ผลจริงหรือเปล่า", href: "/blog/ultrasonic-rat-repeller-really-work" },
   { title: "วิธีเลือกเครื่องดักยุงให้เหมาะกับห้องนอน", href: "/blog/how-to-choose-mosquito-repeller" },
-  { title: "ของใช้กันยุงสำหรับบ้านที่มีเด็ก", href: "/category/mosquito" },
+  { title: "ของใช้กันยุงสำหรับบ้านที่มีเด็ก", href: "/category/mosquito-repeller" },
 ];
 
 export default async function HomePage() {
-  const featured = await getFeaturedProducts();
   const all = await getAllProducts();
   const posts = await getAllPosts();
+  const popularCategories = categories.filter((c) => popularCategorySlugs.includes(c.slug));
 
   return (
     <>
@@ -95,8 +102,7 @@ export default async function HomePage() {
               maxWidth: 760,
             }}
           >
-            รีวิวของใช้ในบ้าน แก้ปัญหายุง หนู แมลง{" "}
-            <span style={{ color: "var(--brand)" }}>สำหรับบ้านคนไทย</span>
+            เครื่องไล่ยุง เครื่องไล่หนู และเครื่องกำจัดแมลงยอดนิยม
           </h1>
           <p
             style={{
@@ -106,15 +112,14 @@ export default async function HomePage() {
               margin: "0 0 28px",
             }}
           >
-            รวมรีวิวเครื่องดักยุง เครื่องไล่หนู เครื่องไล่แมลง และสินค้า Shopee
-            ที่ช่วยแก้ปัญหาจริงในบ้าน พร้อมข้อดี ข้อควรรู้ วิธีใช้ และลิงก์เช็คราคาล่าสุด
+            รวมรีวิว เปรียบเทียบ และแนะนำสินค้าคุณภาพ พร้อมอัปเดตราคาล่าสุดจาก Shopee และ Lazada
           </p>
           <div style={{ display: "flex", gap: 12, flexWrap: "wrap" }}>
             <Link href="#featured" className="btn btn-brand">
-              ดูสินค้าแก้ปัญหา
+              ดูสินค้าขายดี
             </Link>
-            <Link href="#money-pages" className="btn btn-ghost">
-              อ่านบทความทำเงิน
+            <Link href="#buying-guides" className="btn btn-ghost">
+              อ่านคู่มือก่อนซื้อ
             </Link>
           </div>
         </div>
@@ -122,7 +127,7 @@ export default async function HomePage() {
 
       <section className="container" style={{ paddingBlock: 48 }}>
         <h2 style={{ fontSize: 26, fontWeight: 800, marginBottom: 20 }}>
-          เลือกสินค้าตามปัญหาในบ้าน
+          หมวดยอดนิยม
         </h2>
         <div
           style={{
@@ -131,7 +136,7 @@ export default async function HomePage() {
             gridTemplateColumns: "repeat(auto-fit,minmax(240px,1fr))",
           }}
         >
-          {categories.map((c) => (
+          {popularCategories.map((c) => (
             <Link
               key={c.slug}
               href={`/category/${c.slug}`}
@@ -184,46 +189,21 @@ export default async function HomePage() {
             alignItems: "baseline",
             justifyContent: "space-between",
             marginBottom: 20,
-          }}
-        >
-          <h2 style={{ fontSize: 26, fontWeight: 800, margin: 0 }}>รีวิวเครื่องดักยุงยอดนิยม</h2>
-        </div>
-        <div
-          style={{
-            display: "grid",
             gap: 16,
-            gridTemplateColumns: "repeat(auto-fill,minmax(220px,1fr))",
           }}
         >
-          {featured.map((p) => (
-            <ProductCard key={p.id} product={p} />
-          ))}
+          <div>
+            <h2 style={{ fontSize: 26, fontWeight: 800, margin: "0 0 6px" }}>
+              สินค้าที่เราคัดไว้
+            </h2>
+            <p style={{ color: "var(--ink-soft)", margin: 0 }}>
+              รวมสินค้าแก้ปัญหายุง หนู และแมลงที่มีในเว็บตอนนี้ ไม่แสดงซ้ำ เพื่อให้เลือกง่ายขึ้น
+            </p>
+          </div>
+          <Link href="/reviews" className="btn btn-ghost">
+            ดูรีวิวทั้งหมด
+          </Link>
         </div>
-      </section>
-
-      <section id="money-pages" className="container" style={{ paddingBlock: 40 }}>
-        <h2 style={{ fontSize: 26, fontWeight: 800, marginBottom: 20 }}>
-          หน้าทำเงินที่ควรอ่านก่อนซื้อ
-        </h2>
-        <div
-          style={{
-            display: "grid",
-            gap: 12,
-            gridTemplateColumns: "repeat(auto-fit,minmax(260px,1fr))",
-          }}
-        >
-          {moneyPages.map((item) => (
-            <Link key={item.title} href={item.href} className="card card-hover" style={{ padding: 18, fontWeight: 800 }}>
-              {item.title}
-            </Link>
-          ))}
-        </div>
-      </section>
-
-      <section className="container" style={{ paddingBlock: 40 }}>
-        <h2 style={{ fontSize: 26, fontWeight: 800, marginBottom: 20 }}>
-          สินค้า Shopee ที่คัดไว้
-        </h2>
         <div
           style={{
             display: "grid",
@@ -234,6 +214,83 @@ export default async function HomePage() {
           {all.map((p) => (
             <ProductCard key={p.id} product={p} />
           ))}
+        </div>
+      </section>
+
+      <section id="buying-guides" className="container" style={{ paddingBlock: 40 }}>
+        <div style={{ display: "flex", justifyContent: "space-between", gap: 16, alignItems: "end", marginBottom: 20 }}>
+          <div>
+            <h2 style={{ fontSize: 26, fontWeight: 800, margin: "0 0 6px" }}>
+              บทความแนะนำก่อนตัดสินใจซื้อ
+            </h2>
+            <p style={{ color: "var(--ink-soft)", margin: 0 }}>
+              รวมรีวิว เปรียบเทียบ และคู่มือเลือกซื้อที่ช่วยให้ตัดสินใจได้ง่ายขึ้น
+            </p>
+          </div>
+          <Link href="/rankings" className="btn btn-ghost">
+            ดูทั้งหมด
+          </Link>
+        </div>
+        <div
+          style={{
+            display: "grid",
+            gap: 16,
+            gridTemplateColumns: "minmax(0,1.1fr) minmax(280px,0.9fr)",
+          }}
+          className="home-buying-guide-grid"
+        >
+          {buyingGuides
+            .filter((item) => item.featured)
+            .map((item) => (
+              <Link
+                key={item.title}
+                href={item.href}
+                className="card card-hover"
+                style={{
+                  padding: 24,
+                  display: "flex",
+                  flexDirection: "column",
+                  justifyContent: "space-between",
+                  minHeight: 190,
+                  background: "linear-gradient(135deg,#f8fafc,#eef2ff)",
+                  borderColor: "#dbe4ff",
+                }}
+              >
+                <div>
+                  <span className="badge badge-brand">รีวิวเด่น</span>
+                  <h3 style={{ fontSize: 24, fontWeight: 800, margin: "14px 0 8px", lineHeight: 1.25 }}>
+                    {item.title}
+                  </h3>
+                  <p style={{ color: "var(--ink-soft)", margin: 0 }}>{item.text}</p>
+                </div>
+                <span style={{ color: "var(--brand-dark)", fontWeight: 800, marginTop: 20 }}>
+                  อ่านรีวิวก่อนซื้อ →
+                </span>
+              </Link>
+            ))}
+          <div className="card" style={{ padding: 8 }}>
+            {buyingGuides
+              .filter((item) => !item.featured)
+              .map((item, index) => (
+                <Link
+                  key={item.title}
+                  href={item.href}
+                  style={{
+                    display: "flex",
+                    gap: 12,
+                    padding: 14,
+                    borderRadius: 10,
+                    borderBottom: index === buyingGuides.length - 2 ? "none" : "1px solid var(--line)",
+                    alignItems: "center",
+                  }}
+                >
+                  <span style={{ color: "var(--ink-faint)", fontWeight: 800, minWidth: 28 }}>
+                    {String(index + 1).padStart(2, "0")}
+                  </span>
+                  <span style={{ fontWeight: 700, lineHeight: 1.4 }}>{item.title}</span>
+                </Link>
+              ))}
+          </div>
         </div>
       </section>
 
@@ -260,6 +317,33 @@ export default async function HomePage() {
                 {post.excerpt}
               </p>
             </Link>
+          ))}
+        </div>
+      </section>
+
+      <section className="container" style={{ paddingBlock: 40 }}>
+        <h2 style={{ fontSize: 26, fontWeight: 800, marginBottom: 20 }}>
+          คำถามที่พบบ่อย
+        </h2>
+        <div style={{ display: "grid", gap: 12 }}>
+          {[
+            {
+              q: "เครื่องดักยุงกับเครื่องไล่ยุงต่างกันอย่างไร?",
+              a: "เครื่องดักยุงมักใช้แสง UV หรือแรงดูดเพื่อจับยุง ส่วนเครื่องไล่ยุงเน้นทำให้ยุงไม่อยากเข้าใกล้ เช่น น้ำยาไล่ยุงหรือคลื่นเสียง ควรเลือกตามพื้นที่และรูปแบบการใช้งาน",
+            },
+            {
+              q: "เครื่องไล่หนูอัลตราโซนิคได้ผลจริงไหม?",
+              a: "ได้ผลในบางพื้นที่ โดยเฉพาะพื้นที่ปิดและไม่มีสิ่งกีดขวางมาก แต่ควรใช้ร่วมกับการปิดช่องทางเข้าและเก็บอาหารให้มิดชิด",
+            },
+            {
+              q: "ควรซื้อผ่าน Shopee หรือ Lazada ดี?",
+              a: "ควรเช็คราคาล่าสุด คูปอง รีวิวผู้ซื้อ และค่าจัดส่งก่อนสั่งซื้อ เพราะโปรโมชันของแต่ละแพลตฟอร์มเปลี่ยนบ่อย",
+            },
+          ].map((faq) => (
+            <details key={faq.q} className="card" style={{ padding: "16px 20px" }}>
+              <summary style={{ cursor: "pointer", fontWeight: 800 }}>{faq.q}</summary>
+              <p style={{ color: "var(--ink-soft)", marginBottom: 0 }}>{faq.a}</p>
+            </details>
           ))}
         </div>
       </section>

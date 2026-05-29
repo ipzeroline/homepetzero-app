@@ -25,13 +25,12 @@ export function CompareClient({ products }: { products: P[] }) {
 
   const rows: { label: string; render: (p: P) => React.ReactNode }[] = [
     { label: "ราคา", render: (p) => <strong style={{ color: "var(--brand-dark)" }}>฿{p.price.toLocaleString()}</strong> },
+    { label: "กำลังไฟ", render: (p) => p.specs.find((s) => /กำลังไฟ|power/i.test(s.label))?.value ?? "—" },
+    { label: "ขนาดห้อง", render: (p) => p.coverage },
+    { label: "เสียงรบกวน", render: (p) => p.specs.find((s) => /เสียง|noise/i.test(s.label))?.value ?? "ขึ้นกับรุ่นและตำแหน่งวาง" },
     { label: "คะแนนรีวิว", render: (p) => <StarRating value={p.rating} count={p.reviews.length} /> },
+    { label: "คะแนนแนะนำ", render: (p) => <strong>{p.rating.toFixed(1)}/5</strong> },
     { label: "แบรนด์", render: (p) => p.brand },
-    { label: "พื้นที่ครอบคลุม", render: (p) => p.coverage },
-    ...["กำลังไฟ", "ความถี่"].map((label) => ({
-      label,
-      render: (p: P) => p.specs.find((s) => s.label === label)?.value ?? "—",
-    })),
     { label: "ซื้อ", render: (p) => <BuyButton url={p.buyUrl} productId={p.id} label="Shopee" /> },
   ];
 

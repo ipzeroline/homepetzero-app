@@ -4,6 +4,18 @@ import { categories } from "@/data/categories";
 import { siteConfig } from "@/lib/site";
 
 export function Header() {
+  const mainLinks = [
+    ...categories
+      .filter((c) =>
+        ["mosquito", "mosquito-repeller", "rat", "cockroach", "pest-control"].includes(c.slug),
+      )
+      .map((c) => ({ href: `/category/${c.slug}`, label: c.name })),
+    { href: "/reviews", label: "รีวิวสินค้า" },
+    { href: "/compare", label: "เปรียบเทียบ" },
+    { href: "/rankings", label: "จัดอันดับ" },
+    { href: "/blog", label: "บทความ" },
+  ];
+
   return (
     <header
       style={{
@@ -54,12 +66,14 @@ export function Header() {
             gap: 4,
             marginLeft: "auto",
             alignItems: "center",
+            overflowX: "auto",
+            whiteSpace: "nowrap",
           }}
         >
-          {categories.map((c) => (
+          {mainLinks.map((link) => (
             <Link
-              key={c.slug}
-              href={`/category/${c.slug}`}
+              key={link.href}
+              href={link.href}
               style={{
                 padding: "8px 12px",
                 borderRadius: 10,
@@ -68,33 +82,9 @@ export function Header() {
                 color: "var(--ink-soft)",
               }}
             >
-              {c.emoji} {c.name}
+              {link.label}
             </Link>
           ))}
-          <Link
-            href="/compare"
-            style={{
-              padding: "8px 12px",
-              borderRadius: 10,
-              fontSize: 14,
-              fontWeight: 600,
-              color: "var(--ink-soft)",
-            }}
-          >
-            เปรียบเทียบ
-          </Link>
-          <Link
-            href="/blog"
-            style={{
-              padding: "8px 12px",
-              borderRadius: 10,
-              fontSize: 14,
-              fontWeight: 600,
-              color: "var(--ink-soft)",
-            }}
-          >
-            บทความ
-          </Link>
         </nav>
       </div>
     </header>

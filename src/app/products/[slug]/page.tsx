@@ -19,6 +19,7 @@ import { JsonLd } from "@/components/JsonLd";
 import { StarRating } from "@/components/StarRating";
 import { BuyButton } from "@/components/BuyButton";
 import { ProductCard } from "@/components/ProductCard";
+import { ProductConversionWidgets } from "@/components/ProductConversionWidgets";
 
 // pre-render ทุกสินค้าเป็น static (SEO + เร็ว)
 export async function generateStaticParams() {
@@ -57,6 +58,41 @@ export default async function ProductPage({
     .filter((p) => p.id !== product.id)
     .slice(0, 4);
   const buyUrl = withAffiliateTag(product.shopeeUrl, siteConfig.affiliateSubId);
+  const suitableFor =
+    product.category === "rat"
+      ? [
+          "บ้านที่มีร่องรอยหนูในห้องครัวหรือห้องเก็บของ",
+          "คนที่ต้องการลดการใช้กับดักหรือยาเบื่อหนู",
+          "ร้านค้า โกดังขนาดเล็ก หรือพื้นที่เก็บอาหาร",
+          "คนที่ต้องการใช้อุปกรณ์ป้องกันสัตว์รบกวนต่อเนื่อง",
+        ]
+      : product.category === "insect" || product.category === "cockroach"
+        ? [
+            "บ้านหรือคอนโดที่มีแมลงรบกวนเป็นประจำ",
+            "คนที่ต้องการตัวช่วยลดแมลงโดยใช้งานง่าย",
+            "พื้นที่เล็ก เช่น โต๊ะทำงาน ระเบียง หรือห้องพัก",
+            "คนที่ต้องการอุปกรณ์เสริมร่วมกับการทำความสะอาดบ้าน",
+          ]
+        : [
+            "คนที่มียุงในห้องนอนหรือคอนโด",
+            "บ้านที่ไม่อยากใช้สเปรย์หรือยาจุดกันยุงบ่อย ๆ",
+            "ห้องนอน ห้องนั่งเล่น หอพัก หรือพื้นที่ปิด",
+            "คนที่ต้องการสินค้าแก้ปัญหายุงแบบใช้งานง่าย",
+          ];
+  const productFaqs = [
+    {
+      q: `${product.name} เหมาะกับใคร?`,
+      a: `เหมาะกับ ${suitableFor.slice(0, 2).join(" และ ")} โดยควรเลือกตามพื้นที่ใช้งานจริงและอ่านข้อควรพิจารณาก่อนซื้อ`,
+    },
+    {
+      q: "ควรเช็คราคาล่าสุดจากที่ไหน?",
+      a: "ควรกดปุ่มดูราคาล่าสุดบน Shopee เพื่อตรวจสอบคูปอง ค่าจัดส่ง โปรโมชัน และรีวิวผู้ซื้อก่อนสั่งซื้อ",
+    },
+    {
+      q: "สินค้านี้เห็นผล 100% ทันทีไหม?",
+      a: "ไม่ควรคาดหวังผล 100% ทันที เพราะผลลัพธ์ขึ้นกับสภาพพื้นที่ จำนวนยุง หนู หรือแมลง และวิธีใช้งาน ควรใช้ร่วมกับการจัดการต้นเหตุในบ้าน",
+    },
+  ];
 
   const breadcrumbs = [
     { name: "หน้าแรก", path: "/" },
@@ -67,8 +103,35 @@ export default async function ProductPage({
   return (
     <>
       <JsonLd
-        data={[productJsonLd(product), breadcrumbJsonLd(breadcrumbs)]}
+        data={[
+          productJsonLd(product),
+          breadcrumbJsonLd(breadcrumbs),
+          {
+            "@context": "https://schema.org",
+            "@type": "FAQPage",
+            mainEntity: productFaqs.map((faq) => ({
+              "@type": "Question",
+              name: faq.q,
+              acceptedAnswer: { "@type": "Answer", text: faq.a },
+            })),
+          },
+        ]}
       />
+
+      <div
+        style={{
+          position: "sticky",
+          bottom: 12,
+          zIndex: 40,
+          display: "flex",
+          justifyContent: "center",
+          pointerEvents: "none",
+        }}
+      >
+        <div style={{ pointerEvents: "auto" }}>
+          <BuyButton url={buyUrl} productId={product.id} label="ดูราคาล่าสุดบน Shopee" />
+        </div>
+      </div>
 
       <div className="container" style={{ paddingBlock: 28 }}>
         {/* Breadcrumb */}
@@ -89,6 +152,7 @@ export default async function ProductPage({
 
         {/* Main */}
         <div
+          className="product-main-grid"
           style={{
             display: "grid",
             gap: 32,
@@ -175,7 +239,7 @@ export default async function ProductPage({
         </div>
 
         {/* Description + Pros/Cons */}
-        <section style={{ marginTop: 40, display: "grid", gap: 24, gridTemplateColumns: "minmax(0,1.4fr) minmax(0,1fr)" }}>
+        <section className="product-main-grid" style={{ marginTop: 40, display: "grid", gap: 24, gridTemplateColumns: "minmax(0,1.4fr) minmax(0,1fr)" }}>
           <div className="card" style={{ padding: 24 }}>
             <h2 style={{ fontSize: 20, fontWeight: 800, marginTop: 0 }}>รายละเอียด</h2>
             <p style={{ color: "var(--ink-soft)", marginBottom: 16 }}>{product.description}</p>
@@ -201,6 +265,37 @@ export default async function ProductPage({
                 <li key={c} style={{ marginBottom: 6 }}>{c}</li>
               ))}
             </ul>
+          </div>
+        </section>
+
+        <section className="product-main-grid" style={{ marginTop: 40, display: "grid", gap: 24, gridTemplateColumns: "minmax(0,1fr) minmax(0,1fr)" }}>
+          <div className="card" style={{ padding: 24 }}>
+            <h2 style={{ fontSize: 20, fontWeight: 800, marginTop: 0 }}>เหมาะกับใคร</h2>
+            <ul style={{ color: "var(--ink-soft)", paddingLeft: 20, marginBottom: 0 }}>
+              {suitableFor.map((item) => (
+                <li key={item} style={{ marginBottom: 8 }}>{item}</li>
+              ))}
+            </ul>
+          </div>
+          <div className="card" style={{ padding: 24 }}>
+            <h2 style={{ fontSize: 20, fontWeight: 800, marginTop: 0 }}>รีวิวการใช้งานโดยรวม</h2>
+            <p style={{ color: "var(--ink-soft)", marginBottom: 0 }}>
+              จากสเปกและรูปแบบการใช้งาน สินค้านี้เหมาะเป็นตัวช่วยแก้ปัญหาในบ้านแบบใช้งานต่อเนื่อง จุดสำคัญคือควรวางหรือใช้งานให้ถูกตำแหน่ง ตรวจสอบพื้นที่ครอบคลุม และใช้ร่วมกับการจัดการต้นเหตุ เช่น ปิดช่องทางเข้า เก็บอาหารให้มิดชิด หรือกำจัดแหล่งน้ำขัง เพื่อให้ผลลัพธ์ดีขึ้นในระยะยาว
+            </p>
+          </div>
+        </section>
+
+        <section style={{ marginTop: 40 }}>
+          <h2 style={{ fontSize: 22, fontWeight: 800, marginBottom: 16 }}>
+            คำถามที่พบบ่อย
+          </h2>
+          <div style={{ display: "grid", gap: 12 }}>
+            {productFaqs.map((faq) => (
+              <details key={faq.q} className="card" style={{ padding: "16px 20px" }}>
+                <summary style={{ fontWeight: 800, cursor: "pointer" }}>{faq.q}</summary>
+                <p style={{ color: "var(--ink-soft)", marginBottom: 0 }}>{faq.a}</p>
+              </details>
+            ))}
           </div>
         </section>
 
@@ -246,6 +341,10 @@ export default async function ProductPage({
             </div>
           </section>
         )}
+        <ProductConversionWidgets
+          product={{ name: product.name, slug: product.slug }}
+          buyUrl={buyUrl}
+        />
       </div>
     </>
   );

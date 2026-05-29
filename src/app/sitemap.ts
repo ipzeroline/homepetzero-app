@@ -2,6 +2,7 @@ import type { MetadataRoute } from "next";
 import { getAllProducts } from "@/lib/products";
 import { getAllPosts } from "@/lib/posts";
 import { categorySlugs } from "@/data/categories";
+import { topLists } from "@/data/topLists";
 import { siteConfig } from "@/lib/site";
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
@@ -12,7 +13,15 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const staticRoutes: MetadataRoute.Sitemap = [
     { url: base, changeFrequency: "daily", priority: 1 },
     { url: `${base}/compare`, changeFrequency: "weekly", priority: 0.8 },
+    { url: `${base}/reviews`, changeFrequency: "weekly", priority: 0.85 },
+    { url: `${base}/rankings`, changeFrequency: "weekly", priority: 0.85 },
+    { url: `${base}/guides`, changeFrequency: "monthly", priority: 0.75 },
     { url: `${base}/blog`, changeFrequency: "weekly", priority: 0.8 },
+    { url: `${base}/about`, changeFrequency: "yearly", priority: 0.5 },
+    { url: `${base}/contact`, changeFrequency: "yearly", priority: 0.4 },
+    { url: `${base}/affiliate-disclosure`, changeFrequency: "yearly", priority: 0.4 },
+    { url: `${base}/privacy-policy`, changeFrequency: "yearly", priority: 0.3 },
+    { url: `${base}/terms`, changeFrequency: "yearly", priority: 0.3 },
     {
       url: `${base}/review-yage-mosquito-trap/`,
       lastModified: new Date("2026-05-29"),
@@ -25,6 +34,12 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     url: `${base}/category/${c}`,
     changeFrequency: "weekly",
     priority: 0.9,
+  }));
+
+  const rankingRoutes: MetadataRoute.Sitemap = topLists.map((list) => ({
+    url: `${base}/rankings/${list.slug}`,
+    changeFrequency: "monthly",
+    priority: 0.85,
   }));
 
   const productRoutes: MetadataRoute.Sitemap = products.map((p) => ({
@@ -41,5 +56,5 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     priority: 0.6,
   }));
 
-  return [...staticRoutes, ...categoryRoutes, ...productRoutes, ...postRoutes];
+  return [...staticRoutes, ...categoryRoutes, ...rankingRoutes, ...productRoutes, ...postRoutes];
 }

@@ -41,9 +41,15 @@ export function Footer() {
           <div>
             <div style={{ fontWeight: 700, color: "#fff", marginBottom: 12 }}>เมนู</div>
             {[
+              { href: "/reviews", label: "รีวิวสินค้า" },
               { href: "/compare", label: "เปรียบเทียบสินค้า" },
+              { href: "/rankings", label: "จัดอันดับสินค้า" },
               { href: "/blog", label: "บทความ & รีวิว" },
               { href: "/about", label: "เกี่ยวกับเรา" },
+              { href: "/contact", label: "ติดต่อเรา" },
+              { href: "/affiliate-disclosure", label: "Affiliate Disclosure" },
+              { href: "/privacy-policy", label: "นโยบายความเป็นส่วนตัว" },
+              { href: "/terms", label: "เงื่อนไขการใช้งาน" },
             ].map((l) => (
               <div key={l.href} style={{ marginBottom: 8 }}>
                 <Link href={l.href} style={{ fontSize: 14, color: "#cbd5e1" }}>
@@ -66,7 +72,7 @@ export function Footer() {
         >
           <p style={{ margin: "0 0 8px" }}>
             <strong>การเปิดเผยข้อมูลพันธมิตร:</strong>{" "}
-            เว็บไซต์นี้มีลิงก์พันธมิตร (Affiliate) ของ Shopee
+            เว็บไซต์นี้มีลิงก์พันธมิตร (Affiliate) ของ Shopee และ Lazada
             เมื่อคุณคลิกและสั่งซื้อผ่านลิงก์ เราอาจได้รับค่าคอมมิชชันโดยที่คุณไม่ต้องจ่ายเพิ่ม
             ราคาที่แสดงเป็นราคาโดยประมาณ โปรดตรวจสอบราคาจริงที่หน้า Shopee อีกครั้ง
           </p>

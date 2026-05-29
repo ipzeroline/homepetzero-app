@@ -76,6 +76,11 @@ export function websiteJsonLd() {
     alternateName: "Home Pest Zero",
     url: siteConfig.url,
     inLanguage: "th-TH",
+    potentialAction: {
+      "@type": "SearchAction",
+      target: `${siteConfig.url}/search?q={search_term_string}`,
+      "query-input": "required name=search_term_string",
+    },
   };
 }
 

@@ -203,7 +203,9 @@ a {
 @media (max-width: 900px) {
   .yage-review-hero-grid,
   .yage-review-layout,
-  .category-hero-grid {
+  .category-hero-grid,
+  .product-main-grid,
+  .home-buying-guide-grid {
     grid-template-columns: 1fr !important;
   }
 
